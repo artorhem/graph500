@@ -283,7 +283,7 @@ int main(int argc, char** argv) {
                 ? tg.weightmemory + FILE_CHUNKSIZE * (block_idx / ranks_per_row)
                 : wbuf;
 #endif
-        fprintf(stderr,
+        fprintf(stdout,
                 "%d: My range is [%" PRId64 ", %" PRId64
                 ") %swriting  into index %" PRId64 "\n",
                 rank, (int64_t)start_edge_index,
@@ -352,7 +352,7 @@ int main(int argc, char** argv) {
   double make_graph_stop = MPI_Wtime();
   double make_graph_time = make_graph_stop - make_graph_start;
   if (rank == 0) { /* Not an official part of the results */
-    fprintf(stderr, "graph_generation:               %f s\n", make_graph_time);
+    fprintf(stdout, "graph_generation:               %f s\n", make_graph_time);
   }
 
   /* Make user's graph data structure. */
@@ -361,7 +361,7 @@ int main(int argc, char** argv) {
   double data_struct_stop = MPI_Wtime();
   double data_struct_time = data_struct_stop - data_struct_start;
   if (rank == 0) { /* Not an official part of the results */
-    fprintf(stderr, "construction_time:              %f s\n", data_struct_time);
+    fprintf(stdout, "construction_time:              %f s\n", data_struct_time);
   }
 
   // generate non-isolated roots

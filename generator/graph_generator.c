@@ -10,7 +10,6 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
-
 #ifndef __STDC_FORMAT_MACROS
 #define __STDC_FORMAT_MACROS
 #endif
@@ -152,7 +151,7 @@ static inline int64_t scramble(int64_t v0, int lgN, uint64_t val0,
 
 /* Make a single graph edge using a pre-set MRG state. */
 static void make_one_edge(int64_t nverts, int level, int lgN, mrg_state* st,
-                          packed_edge* result, uint64_t val0, uint64_t val1) {
+                          packed_edge* result, uint64_t val0, uint64_t val1) { //, FILE* edge_list) {
   int64_t base_src = 0, base_tgt = 0;
   while (nverts > 1) {
     int square = generate_4way_bernoulli(st, level, lgN);
@@ -174,8 +173,10 @@ static void make_one_edge(int64_t nverts, int level, int lgN, mrg_state* st,
   }
   write_edge(result, scramble(base_src, lgN, val0, val1),
              scramble(base_tgt, lgN, val0, val1)); //Apply random permutation to vertex numbers
-
-  fprintf(stderr, "%ld ,%ld\n", result->v0, result->v1);
+  
+  fprintf(stderr, "%ld %ld\n", result->v0, result->v1);
+  //fprintf(edge_list, "%ld  %ld\n", result->v0, result->v1);
+  //fflush(edge_list);
 }
 
 /* Generate a range of edges (from start_edge to end_edge of the total graph),
@@ -216,6 +217,12 @@ void generate_kronecker_range(
 #pragma mta assert parallel
 #pragma mta block schedule
 #endif
+//FILE *int_edge_list;
+
+//int_edge_list = fopen("graph_e16_s","w");
+//if(int_edge_list ==NULL){
+//	fprintf(stderr,"\nCould not create new edge file\n");
+//}
   for (ei = start_edge; ei < end_edge; ++ei) {
     mrg_state new_state = state;
     mrg_skip(&new_state, 0, (uint64_t)ei, 0);
